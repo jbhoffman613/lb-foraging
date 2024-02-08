@@ -530,9 +530,8 @@ class ForagingEnv(Env):
         for i, (player, action) in enumerate(zip(self.players, actions)):
             if action not in self._valid_actions[player]:
                 self.logger.info(
-                    "{}{} attempted invalid action {}.".format(
-                        player.name, player.position, action
-                    )
+                    "%s%s attempted invalid action %s.",
+                    player.name, player.position, action
                 )
                 actions[i] = Action.NONE
 
