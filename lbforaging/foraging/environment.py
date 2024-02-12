@@ -491,8 +491,9 @@ class ForagingEnv(Env):
                 f"obs space error: obs: {obs}, obs_space: {self.observation_space[i]}"
         
         truncated_term = False
-        # To turn this into a single agent task, you need to sum the nreward and the ndone
-        return nobs, nreward, ndone, truncated_term, ninfo
+        # To turn this into a single agent task, we sum the nreward and the ndone
+        assert all(ndone) == any(ndone)
+        return nobs, sum(nreward), all(ndone), truncated_term, ninfo
 
     def test_make_gym_obs(self):
         ''' Test wrapper to test the current observation in a public manner. '''
