@@ -85,6 +85,7 @@ class ForagingEnv(Env):
         normalize_reward=True,
         grid_observation=False,
         penalty=0.0,
+        merge_gym_obs=False,
     ):
         self.logger = logging.getLogger(__name__)
         self.seed()
@@ -115,6 +116,8 @@ class ForagingEnv(Env):
         self.viewer = None
 
         self.n_agents = len(self.players)
+
+        self.merge_gym_obs = merge_gym_obs
 
     def seed(self, seed=0):
         self.np_random, seed = seeding.np_random(seed)
@@ -493,7 +496,9 @@ class ForagingEnv(Env):
         truncated_term = False
         # To turn this into a single agent task, we sum the nreward and the ndone
         assert all(ndone) == any(ndone)
-        return nobs, sum(nreward), all(ndone), truncated_term, ninfo
+        if self.merge_gym_obs:
+            return nobs, sum(nreward), all(ndone), truncated_term, ninfo
+        return nobs, nreward, ndone, truncated_term, ninfo
 
     def test_make_gym_obs(self):
         ''' Test wrapper to test the current observation in a public manner. '''
